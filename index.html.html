@@ -1,0 +1,178 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>ATM ni Jojosiwa</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #282c34;
+            color: #61dafb;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background-color: #20232a;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .mt-4 {
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            margin: 10px;
+            transition: transform 0.2s;
+        }
+
+            .btn:hover {
+                transform: scale(1.1);
+            }
+
+        .jumbotron {
+            background-color: #61dafb;
+            color: #20232a;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        input {
+            margin: 10px 0;
+        }
+
+        #atm-output {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="jumbotron mt-4">
+            <h1 class="display-4">ATM machine na emex2 lang ;)</h1>
+            <div id="account-selection">
+                <p class="lead">Enter your account number:</p>
+                <input type="text" id="account-number" class="form-control" placeholder="Account Number">
+                <button class="btn btn-primary btn-lg mt-4" onclick="selectAccount()">Submit</button>
+            </div>
+            <div id="pin-authentication" class="hidden">
+                <p class="lead">Enter your PIN:</p>
+                <input type="password" id="pin" class="form-control" placeholder="PIN">
+                <button class="btn btn-primary btn-lg mt-4" onclick="authenticatePIN()">Submit</button>
+            </div>
+            <div id="atm-menu" class="hidden">
+                <p class="lead">Choose an option:</p>
+                <button class="btn btn-primary btn-lg mt-4" onclick="checkBalance()">Check Balance</button>
+                <button class="btn btn-primary btn-lg mt-4" onclick="depositMoney()">Deposit</button>
+                <button class="btn btn-primary btn-lg mt-4" onclick="withdrawMoney()">Withdraw</button>
+                <button class="btn btn-danger btn-lg mt-4" onclick="exitATM()">Exit</button>
+            </div>
+            <div id="atm-output" class="mt-4"></div>
+        </div>
+    </div>
+
+    <script>
+        let accountNo1 = "09052676217";
+        let accountNo2 = "654321";
+        let pin1 = "1121";
+        let pin2 = "2222";
+        let balance1 = 1000;
+        let balance2 = 2000;
+        let selectedAccount = null;
+        let selectedBalance = null;
+        let pinAttempts = 0;
+
+        function selectAccount() {
+            const accountNumber = document.getElementById("account-number").value;
+            if (accountNumber === accountNo1) {
+                selectedAccount = accountNo1;
+                selectedBalance = balance1;
+            } else if (accountNumber === accountNo2) {
+                selectedAccount = accountNo2;
+                selectedBalance = balance2;
+            } else {
+                alert("Invalid account number");
+                return;
+            }
+            document.getElementById("account-selection").classList.add("hidden");
+            document.getElementById("pin-authentication").classList.remove("hidden");
+        }
+
+        function authenticatePIN() {
+            const pin = document.getElementById("pin").value;
+            if ((selectedAccount === accountNo1 && pin === pin1) || (selectedAccount === accountNo2 && pin === pin2)) {
+                document.getElementById("pin-authentication").classList.add("hidden");
+                document.getElementById("atm-menu").classList.remove("hidden");
+            } else {
+                pinAttempts++;
+                if (pinAttempts >= 3) {
+                    alert("Access denied. Too many incorrect attempts.");
+                    resetATM();
+                } else {
+                    alert("Incorrect PIN. Try again.");
+                }
+            }
+        }
+
+        function checkBalance() {
+            document.getElementById("atm-output").innerText = `Your balance is: ${selectedBalance} pesos`;
+        }
+
+        function depositMoney() {
+            const amount = prompt("Enter amount to deposit (50 pesos or more):");
+            if (amount >= 50) {
+                selectedBalance += parseInt(amount);
+                document.getElementById("atm-output").innerText = `Deposit successful. New balance: ${selectedBalance} pesos`;
+            } else {
+                alert("Invalid amount. Must be 50 pesos or more.");
+            }
+        }
+
+        function withdrawMoney() {
+            const amount = prompt("Enter amount to withdraw (50 pesos or more):");
+            if (amount >= 50 && amount <= selectedBalance) {
+                selectedBalance -= parseInt(amount);
+                document.getElementById("atm-output").innerText = `Withdrawal successful. New balance: ${selectedBalance} pesos`;
+            } else {
+                alert("Invalid amount. Must be 50 pesos or more and less than or equal to the balance.");
+            }
+        }
+
+        function exitATM() {
+            alert("Thank you for using the ATM. Goodbye!");
+            resetATM();
+        }
+
+        function resetATM() {
+            selectedAccount = null;
+            selectedBalance = null;
+            pinAttempts = 0;
+            document.getElementById("account-selection").classList.remove("hidden");
+            document.getElementById("pin-authentication").classList.add("hidden");
+            document.getElementById("atm-menu").classList.add("hidden");
+            document.getElementById("atm-output").innerText = "";
+            document.getElementById("account-number").value = "";
+            document.getElementById("pin").value = "";
+        }
+    </script>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
