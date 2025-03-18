@@ -1,177 +1,159 @@
 ﻿<!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <title>ATM ni Jojosiwa</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
     <style>
         body {
-            font-family: 'Comic Sans MS', cursive, sans-serif;
-            background-color: #282c34;
-            color: #61dafb;
-            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
             margin: 0;
             padding: 0;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
 
         .container {
-            background-color: #20232a;
+            max-width: 600px;
+            margin: 50px auto;
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        .hidden {
-            display: none;
+        h1 {
+            text-align: center;
         }
 
-        .mt-4 {
-            margin-top: 1.5rem;
+        form {
+            display: flex;
+            flex-direction: column;
         }
 
-        .btn {
-            margin: 10px;
-            transition: transform 0.2s;
-        }
-
-            .btn:hover {
-                transform: scale(1.1);
+            form input, form textarea, form button {
+                margin-bottom: 10px;
+                padding: 10px;
+                font-size: 16px;
             }
 
-        .jumbotron {
-            background-color: #61dafb;
-            color: #20232a;
-            border-radius: 10px;
-            padding: 20px;
+        #task-list {
+            list-style: none;
+            padding: 0;
         }
 
-        input {
-            margin: 10px 0;
-        }
+            #task-list li {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px;
+                background: #f9f9f9;
+                margin-bottom: 10px;
+                border: 1px solid #ddd;
+            }
 
-        #atm-output {
-            margin-top: 20px;
-            font-size: 1.2em;
+                #task-list li.completed {
+                    text-decoration: line-through;
+                    color: #888;
+                }
+
+        button {
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="jumbotron mt-4">
-            <h1 class="display-4">ATM machine na emex2 lang ;)</h1>
-            <div id="account-selection">
-                <p class="lead">Enter your account number:</p>
-                <input type="text" id="account-number" class="form-control" placeholder="Account Number">
-                <button class="btn btn-primary btn-lg mt-4" onclick="selectAccount()">Submit</button>
-            </div>
-            <div id="pin-authentication" class="hidden">
-                <p class="lead">Enter your PIN:</p>
-                <input type="password" id="pin" class="form-control" placeholder="PIN">
-                <button class="btn btn-primary btn-lg mt-4" onclick="authenticatePIN()">Submit</button>
-            </div>
-            <div id="atm-menu" class="hidden">
-                <p class="lead">Choose an option:</p>
-                <button class="btn btn-primary btn-lg mt-4" onclick="checkBalance()">Check Balance</button>
-                <button class="btn btn-primary btn-lg mt-4" onclick="depositMoney()">Deposit</button>
-                <button class="btn btn-primary btn-lg mt-4" onclick="withdrawMoney()">Withdraw</button>
-                <button class="btn btn-danger btn-lg mt-4" onclick="exitATM()">Exit</button>
-            </div>
-            <div id="atm-output" class="mt-4"></div>
-        </div>
+        <h1>Task Manager ni lance</h1>
+        <form id="task-form">
+            <input type="text" id="task-title" placeholder="Task Title" required>
+            <textarea id="task-desc" placeholder="Task Description" required></textarea>
+            <input type="date" id="task-deadline" required>
+            <button type="submit">Add Task</button>
+        </form>
+        <ul id="task-list"></ul>
     </div>
+    <script>document.addEventListener('DOMContentLoaded', function() {
+            const taskForm = document.getElementById('task-form');
+            const taskList = document.getElementById('task-list');
 
-    <script>
-        let accountNo1 = "09052676217";
-        let accountNo2 = "654321";
-        let pin1 = "1121";
-        let pin2 = "2222";
-        let balance1 = 1000;
-        let balance2 = 2000;
-        let selectedAccount = null;
-        let selectedBalance = null;
-        let pinAttempts = 0;
+            // Load tasks from localStorage
+            loadTasks();
 
-        function selectAccount() {
-            const accountNumber = document.getElementById("account-number").value;
-            if (accountNumber === accountNo1) {
-                selectedAccount = accountNo1;
-                selectedBalance = balance1;
-            } else if (accountNumber === accountNo2) {
-                selectedAccount = accountNo2;
-                selectedBalance = balance2;
-            } else {
-                alert("Invalid account number");
-                return;
-            }
-            document.getElementById("account-selection").classList.add("hidden");
-            document.getElementById("pin-authentication").classList.remove("hidden");
-        }
+            taskForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                addTask();
+            });
 
-        function authenticatePIN() {
-            const pin = document.getElementById("pin").value;
-            if ((selectedAccount === accountNo1 && pin === pin1) || (selectedAccount === accountNo2 && pin === pin2)) {
-                document.getElementById("pin-authentication").classList.add("hidden");
-                document.getElementById("atm-menu").classList.remove("hidden");
-            } else {
-                pinAttempts++;
-                if (pinAttempts >= 3) {
-                    alert("Access denied. Too many incorrect attempts.");
-                    resetATM();
-                } else {
-                    alert("Incorrect PIN. Try again.");
+            taskList.addEventListener('click', function(e) {
+                if (e.target.classList.contains('complete-task')) {
+                    toggleTaskCompletion(e.target.parentElement);
+                } else if (e.target.classList.contains('delete-task')) {
+                    deleteTask(e.target.parentElement);
                 }
+            });
+
+            function addTask() {
+                const title = document.getElementById('task-title').value;
+                const desc = document.getElementById('task-desc').value;
+                const deadline = document.getElementById('task-deadline').value;
+
+                const task = {
+                    title,
+                    desc,
+                    deadline,
+                    completed: false
+                };
+
+                const tasks = getTasksFromStorage();
+                tasks.push(task);
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+
+                renderTask(task);
+                taskForm.reset();
             }
-        }
 
-        function checkBalance() {
-            document.getElementById("atm-output").innerText = `Your balance is: ${selectedBalance} pesos`;
-        }
-
-        function depositMoney() {
-            const amount = prompt("Enter amount to deposit (50 pesos or more):");
-            if (amount >= 50) {
-                selectedBalance += parseInt(amount);
-                document.getElementById("atm-output").innerText = `Deposit successful. New balance: ${selectedBalance} pesos`;
-            } else {
-                alert("Invalid amount. Must be 50 pesos or more.");
+            function renderTask(task) {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <span>${task.title} - ${task.desc} (Due: ${task.deadline})</span>
+                    <button class="complete-task">${task.completed ? 'Undo' : 'Complete'}</button>
+                    <button class="delete-task">Delete</button>
+                `;
+                if (task.completed) {
+                    li.classList.add('completed');
+                }
+                taskList.appendChild(li);
             }
-        }
 
-        function withdrawMoney() {
-            const amount = prompt("Enter amount to withdraw (50 pesos or more):");
-            if (amount >= 50 && amount <= selectedBalance) {
-                selectedBalance -= parseInt(amount);
-                document.getElementById("atm-output").innerText = `Withdrawal successful. New balance: ${selectedBalance} pesos`;
-            } else {
-                alert("Invalid amount. Must be 50 pesos or more and less than or equal to the balance.");
+            function loadTasks() {
+                const tasks = getTasksFromStorage();
+                tasks.forEach(task => renderTask(task));
             }
-        }
 
-        function exitATM() {
-            alert("Thank you for using the ATM. Goodbye!");
-            resetATM();
-        }
+            function getTasksFromStorage() {
+                const tasks = localStorage.getItem('tasks');
+                return tasks ? JSON.parse(tasks) : [];
+            }
 
-        function resetATM() {
-            selectedAccount = null;
-            selectedBalance = null;
-            pinAttempts = 0;
-            document.getElementById("account-selection").classList.remove("hidden");
-            document.getElementById("pin-authentication").classList.add("hidden");
-            document.getElementById("atm-menu").classList.add("hidden");
-            document.getElementById("atm-output").innerText = "";
-            document.getElementById("account-number").value = "";
-            document.getElementById("pin").value = "";
-        }
-    </script>
-    <!-- Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+            function toggleTaskCompletion(taskElement) {
+                const tasks = getTasksFromStorage();
+                const taskIndex = Array.from(taskList.children).indexOf(taskElement);
+                tasks[taskIndex].completed = !tasks[taskIndex].completed;
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+                taskElement.classList.toggle('completed');
+                taskElement.querySelector('.complete-task').textContent = tasks[taskIndex].completed ? 'Undo' : 'Complete';
+            }
+
+            function deleteTask(taskElement) {
+                const tasks = getTasksFromStorage();
+                const taskIndex = Array.from(taskList.children).indexOf(taskElement);
+                tasks.splice(taskIndex, 1);
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+                taskElement.remove();
+            }
+        });</script>
+</body>
+</html>
+
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
