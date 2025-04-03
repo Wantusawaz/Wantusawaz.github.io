@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.1">
+  <title>Home</title>
+  <link rel="stylesheet" href="/bootstrap website1.css">
+  <title>Background image</title>
+</head>
+  <style>
+    .box1{
+    margin: 40px auto;
+    padding: 20px;
+    border-radius: 20px;
+    background-color: #3b747deb;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: none;
+    position: relative;
+    max-width: 1100px;
+    height: 500px;
+   overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+.image1{    
+    
+    width: 50%;
+    height: 60%;
+    position: absolute;
+    top: 50%; 
+    right: 0; 
+    transform: translateY(-50%); 
+    z-index: 1;
+    opacity: 90%;
+    object-fit: cover;
+}
+  
+
+  body {
+    background-image: url(/images/background.jpg);
+    background-size: cover; /* Ensures the image covers the entire viewport */
+    background-position: center; /* Centers the image */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
+    margin: 0; /* Removes default margin to avoid scrollbars */
+    padding: 0; /* Removes default padding */
+}
+
+
+/* dropdown button */ 
+
+.dropdown1 button{
+    background-color: transparent;
+    color: #E0E0E0;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-family: 'inter', sans-serif;
+    font-family: 'lato', sans-serif;
+    font-weight: 700;
+    border: none;
+    border-radius: 5px;
+    border-bottom-left-radius: 0px;
+    cursor: pointer;
+    margin-top: 20px;
+    
+  
+}
+.dropdown1 button:hover{
+    background-color: #2b1e1634;
+    color: hsla(209, 16%, 41%, 0.852);
+    border-radius: 5px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.dropdown1 a{
+    display: block;
+    text-decoration: none;
+    color: white;
+    padding: 40px 60px;
+}
+
+.dropdown1 .content{
+    background-color: #4277ad1a;
+    border-radius: 10px;
+    border-top-left-radius: 0px;
+    min-width: 150px;
+    display: none;
+    position: absolute;
+   
+
+}
+@keyframes dropdownFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-10px); 
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0); 
+    }
+}
+.dropdown1:hover .content{
+    display: block;
+    color: #5c4747;
+    animation: dropdownFadeIn 0.3s ease-in-out; 
+    
+}
+.dropdown-container {
+    border-bottom: #4463755b 5px solid;
+    width: 100%;
+    background-color: none;
+    display: flex; /* align items side by side */
+    gap: 20px; /* space between the buttons */
+    justify-content: flex-end;/* align the buttons to the right */
+    align-items: center; /* align the buttons vertically */
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    height: 80px;
+ 
+}
+.Home{
+    display: block;
+    position: absolute;
+    align-items: center;
+    left: 27px;
+    justify-content: flex-start;
+    text-decoration: none;
+    color: #E0E0E0;
+    font-size: 20px;
+    font-family: 'lato', sans-serif;
+    font-weight: 700;
+    border: none;
+    padding: 10px 20px;
+}
+.Home:hover{
+    color: hsla(209, 16%, 41%, 0.852);
+    background-color: #2b1e1634;
+    border-radius: 5px;
+
+}
+
+
+
+    
+
+
+  </style>
+
+<body style="background-image: url(/images/background.jpg);">
+
+  <div class="box1">
+  <img class="image1" src="/images/0e82ebf53c1b2a19b7cc92ef74282029.png" alt="">
+  
+<!-- dropdowns --> 
+
+<div class="dropdown-container">
+  <a class="Home" href="bootstrap website1.html">Home</a>
+
+  <div class="dropdown1">
+    <button>Food</button>
+    <div class="content">
+      <a href="banana">Banana</a>
+      <a href="apple">Apple</a>
+      <a href="orange">Orange</a>
+    </div>
+  </div>
+
+  <div class="dropdown1">
+    <button>Drinks</button>
+    <div class="content">
+      <a href="water">Water</a>
+      <a href="juice">Juice</a>
+      <a href="soda">Soda</a>
+    </div>
+  </div>
+
+  <div class="dropdown1">
+    <button>Desserts</button>
+    <div class="content">
+      <a href="cake">Cake</a>
+      <a href="icecream">Ice Cream</a>
+      <a href="pie">Pie</a>
+    </div>
+  </div>
+
+  <div class="dropdown1">
+    <a href="/bootstrap website2.html"><button>Bundles</button></a>
+    <div class="content">
+      <a href="A1">A1</a>
+      <a href="A2">A2</a>
+      <a href="A3">A3</a>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
